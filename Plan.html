@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0px;
+        }
+        table, td{
+            margin-left:auto;
+            margin-right:auto;
+            border:1px solid black;
+            padding: 2px;
+            min-width: 100px;
+            min-height: 30px;
+        }
+        td{
+            white-space: pre-line;
+        }
+        aside{
+            width: 10%;
+            float: left;
+            background-color:green;
+            text-align: center;
+        }
+        main{
+            width: 90%;
+            float: left;
+            text-align: center;
+        }
+        a:hover{
+            color: lightblue;
+        }
+        #tytul{
+            height: 100px;
+        }
+        </style>
+</head>
+<body>
+    <aside id="lista">
+    </aside>
+    <main id="prawa">
+        <div id="tytul"></div>
+        <div id="tabela"></div>
+    </main>
+</body>
+</html>
+
+<script>
+    function Get(yourUrl)
+    {
+        var Httpreq = new XMLHttpRequest(); // a new request
+        Httpreq.open("GET",yourUrl,false);
+        Httpreq.send(null);
+        return Httpreq.responseText;
+    }
+    
+    function createTable(klucz){
+        var tabela = strona[klucz.toString()];
+        var tablebody = document.createElement("table");
+        
+        tabela.forEach(key => 
+        {
+            var row = document.createElement("tr");
+            key.forEach(komorka => 
+            {
+                var cell = document.createElement("td")
+                cell.innerText = komorka.toString().replace("%", "\n");
+                row.appendChild(cell)
+            })
+            tablebody.appendChild(row);
+        });
+        document.getElementById("tabela").innerHTML = "";
+        document.getElementById("tabela").appendChild(tablebody);
+        document.getElementById('tytul').innerHTML = "<h1>"+ klucz.toString()+"</h1>"
+    }
+
+    function printTable(key){
+        strona[key].forEach(key => {
+        const element = document.createElement("a");
+        element.setAttribute("onclick", "createTable('"+key.toString()+"')")
+        element.setAttribute("href", "#")
+        element.innerText = key.toString();
+        document.getElementById('lista').appendChild(element);
+        document.getElementById('lista').innerHTML += "<br>";
+        });
+    }
+
+    var strona = JSON.parse(Get("https://tymekh.github.io/PlanLekcji/lekcje.json"));
+
+    document.getElementById('lista').innerHTML += "<h3>Klasy</h3>"
+    printTable("klasy")
+    document.getElementById('lista').innerHTML += "<h3>Nauczyciele</h3>"
+    printTable("nauczyciele")
+    document.getElementById('lista').innerHTML += "<h3>sale</h3>"
+    printTable("sale")
+
+</script>
